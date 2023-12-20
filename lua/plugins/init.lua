@@ -88,7 +88,6 @@ return {
     'folke/tokyonight.nvim',
     priority = 1000,
     lazy = false,
-   
   },
 
   {
@@ -159,7 +158,6 @@ return {
   {
     "aserowy/tmux.nvim",
   },
- 
   {
   "ray-x/go.nvim",
   dependencies = {

@@ -1,5 +1,4 @@
 -- config for all plugins
-
 require('config.plugins.telescope')
 
 require('config.plugins.treesitter')

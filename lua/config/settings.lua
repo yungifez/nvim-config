@@ -39,6 +39,11 @@ vim.o.termguicolors = true
 vim.opt.autowrite = true
 vim.opt.autoread = true
 
+-- set spaces and tab
+vim.opt.tabstop = 4 --a tab should look like 4 spaces
+vim.o.expandtab = true --use spaces instead of tabs
+vim.o.softtabstop = 4 -- number of spaces inserted when tab is pressed
+vim.o.shiftwidth = 4 -- number of spaces when indenting
 -- set relative line numbers
 vim.opt.relativenumber = true
 
@@ -54,4 +59,5 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
 

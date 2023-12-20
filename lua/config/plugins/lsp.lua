@@ -109,6 +109,16 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
+-- jdtls config so it stops being annouying
+
+require'lspconfig'.jdtls.setup{
+  handlers = {
+   ['$/progress'] = function(_, result, ctx)
+      -- disable progress updates.
+   end,
+},
+
+}
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
