@@ -10,7 +10,7 @@ vim.o.mouse = 'a'
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+--vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -44,6 +44,12 @@ vim.opt.tabstop = 4 --a tab should look like 4 spaces
 vim.o.expandtab = true --use spaces instead of tabs
 vim.o.softtabstop = 4 -- number of spaces inserted when tab is pressed
 vim.o.shiftwidth = 4 -- number of spaces when indenting
+vim.o.smartindent = true
+vim.o.autoindent = true
+
+-- prevent cursor from sticking to the bottom
+vim.o.scrolloff = 5
+
 -- set relative line numbers
 vim.opt.relativenumber = true
 

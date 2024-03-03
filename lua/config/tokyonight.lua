@@ -1,9 +1,12 @@
 require("tokyonight").setup({
   transparent = true,
-    styles = {
-       sidebars = "transparent",
-       floats = "transparent",
-    }
+  styles = {
+    floats = "transparent",
+    --on_colors = function(colors)
+    -- colors.hint = colors.orange
+    -- colors.error = "#ff0000"
+    --end
+  }
 })
 
 vim.cmd.colorscheme 'tokyonight'

@@ -1,4 +1,3 @@
-
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -74,7 +73,7 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  html = { filetypes = { 'html', 'twig', 'hbs', 'blade' } },
 
   lua_ls = {
     Lua = {
@@ -93,6 +92,12 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
+local lspconfig_status_ok, lspconfig = pcall(require, "lspconfig")
+
+if not lspconfig_status_ok then
+  vim.notify("Couldn't load LSP-Config" .. lspconfig, "error")
+  return
+end
 
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
@@ -104,21 +109,16 @@ mason_lspconfig.setup_handlers {
       capabilities = capabilities,
       on_attach = on_attach,
       settings = servers[server_name],
+      handlers = {
+        ['$/progress'] = function(_, result, ctx)
+          -- disable progress updates.
+        end,
+      },
       filetypes = (servers[server_name] or {}).filetypes,
     }
   end,
 }
 
--- jdtls config so it stops being annouying
-
-require'lspconfig'.jdtls.setup{
-  handlers = {
-   ['$/progress'] = function(_, result, ctx)
-      -- disable progress updates.
-   end,
-},
-
-}
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
