@@ -35,15 +35,21 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- Set color scheme
+vim.cmd.colorscheme 'tokyonight'
+
 -- let vim autoread and autowrite
 vim.opt.autowrite = true
 vim.opt.autoread = true
 
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+
 -- set spaces and tab
-vim.opt.tabstop = 4 --a tab should look like 4 spaces
+vim.opt.tabstop = 4    --a tab should look like 4 spaces
 vim.o.expandtab = true --use spaces instead of tabs
-vim.o.softtabstop = 4 -- number of spaces inserted when tab is pressed
-vim.o.shiftwidth = 4 -- number of spaces when indenting
+vim.o.softtabstop = 4  -- number of spaces inserted when tab is pressed
+vim.o.shiftwidth = 4   -- number of spaces when indenting
 vim.o.smartindent = true
 vim.o.autoindent = true
 
@@ -65,5 +71,3 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
-
-
