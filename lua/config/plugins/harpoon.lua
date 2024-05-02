@@ -9,6 +9,11 @@ vim.keymap.set("n", "<M-u>", function() harpoon:list():select(1) end, { desc = "
 vim.keymap.set("n", "<M-i>", function() harpoon:list():select(2) end, { desc = "Go to harpoon list item 2" })
 vim.keymap.set("n", "<M-o>", function() harpoon:list():select(3) end, { desc = "Go to harpoon list item 3" })
 vim.keymap.set("n", "<M-p>", function() harpoon:list():select(4) end, { desc = "Go to harpoon list item 4" })
+vim.api.nvim_create_user_command('HarpoonDelete', function(details)
+  local args = details.fargs
+  harpoon:list():remove_at(args[1])
+  print("Deleted item " .. args[1] .. " in harpoon")
+end, { nargs = '*' })
 
 vim.keymap.set("n", "du", function()
   harpoon:list():remove_at(1)
