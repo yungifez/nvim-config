@@ -2,6 +2,15 @@
 return {
   'nvim-telescope/telescope.nvim',
   branch = '0.1.x',
+  config = {
+    defaults = {
+      layout_config = {
+        horizontal = {
+          preview_cutoff = 0,
+        },
+      },
+    },
+  },
   dependencies = {
     'nvim-lua/plenary.nvim',
     -- Fuzzy Finder Algorithm which requires local dependencies to be built.
