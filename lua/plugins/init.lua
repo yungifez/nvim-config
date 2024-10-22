@@ -117,16 +117,25 @@ return {
     },
   },
   {
-    "ray-x/go.nvim",
-    dependencies = {
-      "ray-x/guihua.lua",
+    'ricardoramirezr/blade-nav.nvim',
+    dependencies = {                -- totally optional
+      'hrsh7th/nvim-cmp',           -- if using nvim-cmp
     },
-    config = function()
-      require("go").setup()
-    end,
-    event = { "CmdlineEnter" },
-    ft = { "go", 'gomod' },
-    build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
-  }
+    ft = { 'blade', 'php' },        -- optional, improves startup time
+    opts = {
+      close_tag_on_complete = true, -- default: true
+    },
+  }, {
+  "ray-x/go.nvim",
+  dependencies = {
+    "ray-x/guihua.lua",
+  },
+  config = function()
+    require("go").setup()
+  end,
+  event = { "CmdlineEnter" },
+  ft = { "go", 'gomod' },
+  build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
+}
 
 }
