@@ -1,16 +1,9 @@
 return {
-  'folke/tokyonight.nvim',
-  priority = 1000,
+  "bluz71/vim-moonfly-colors",
+  name = "moonfly",
   lazy = false,
-  opts = {},
-  config = {
-    transparent = true,
-    styles = {
-      floats = "transparent",
-      --on_colors = function(colors)
-      -- colors.hint = colors.orange
-      -- colors.error = "#ff0000"
-      --end
-    }
-  }
+  priority = 1000,
+  init = function()
+    vim.g.moonflyTransparent = true
+  end
 }

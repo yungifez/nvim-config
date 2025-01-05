@@ -36,7 +36,7 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 
 -- Set color scheme
-vim.cmd.colorscheme 'tokyonight'
+vim.cmd.colorscheme 'moonfly'
 
 -- let vim autoread and autowrite
 vim.opt.autowrite = true
