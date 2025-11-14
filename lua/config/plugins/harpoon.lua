@@ -3,12 +3,16 @@ local harpoon = require("harpoon")
 -- REQUIRED
 harpoon:setup({})
 
-vim.keymap.set("n", "<C-a>", function() harpoon:list():add() end, { desc = "Append to harpoon" })
+vim.keymap.set("n", "<C-h>", function() harpoon:list():add() end, { desc = "Append to harpoon" })
 
 vim.keymap.set("n", "<M-u>", function() harpoon:list():select(1) end, { desc = "Go to harpoon list item 1" })
 vim.keymap.set("n", "<M-i>", function() harpoon:list():select(2) end, { desc = "Go to harpoon list item 2" })
 vim.keymap.set("n", "<M-o>", function() harpoon:list():select(3) end, { desc = "Go to harpoon list item 3" })
 vim.keymap.set("n", "<M-p>", function() harpoon:list():select(4) end, { desc = "Go to harpoon list item 4" })
+vim.keymap.set("n", "<M-U>", function() harpoon:list():select(5) end, { desc = "Go to harpoon list item 5" })
+vim.keymap.set("n", "<M-I>", function() harpoon:list():select(6) end, { desc = "Go to harpoon list item 6" })
+vim.keymap.set("n", "<M-O>", function() harpoon:list():select(7) end, { desc = "Go to harpoon list item 7" })
+vim.keymap.set("n", "<M-P>", function() harpoon:list():select(8) end, { desc = "Go to harpoon list item 8" })
 vim.api.nvim_create_user_command('HarpoonDelete', function(details)
   local args = details.fargs
   harpoon:list():remove_at(args[1])
@@ -31,6 +35,10 @@ vim.keymap.set("n", "dp", function()
   harpoon:list():remove_at(4)
   print("Deleted item 4 in harpoon")
 end)
+vim.api.nvim_create_user_command('HarpoonDeleteAll', function()
+  harpoon:list():clear()
+  print("Deleted all items in harpoon")
+end, {})
 
 -- Toggle previous & next buffers stored within Harpoon list
 vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
