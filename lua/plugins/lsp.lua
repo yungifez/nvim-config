@@ -1,83 +1,246 @@
--- NOTE: This is where your plugins related to LSP can be installed.
---  The configuration is done below. Search for lspconfig to find it below.
+-- lua/plugins/lsp.lua
+
 return {
-  -- LSP Configuration & Plugins
-  'neovim/nvim-lspconfig',
+  "neovim/nvim-lspconfig",
+
   dependencies = {
-    -- Automatically install LSPs to stdpath for neovim
-    'williamboman/mason.nvim',
-    'williamboman/mason-lspconfig.nvim',
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
 
-    -- Useful status updates for LSP
-    -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-    { 'j-hui/fidget.nvim', opts = {} },
+    { "j-hui/fidget.nvim", opts = {} },
 
-    'folke/neodev.nvim',
+    "folke/lazydev.nvim",
+
+    -- Formatting
+    "stevearc/conform.nvim",
   },
 
   config = function()
-    -- Switch for controlling whether you want autoformatting.
-    --  Use :FormatToggle to toggle autoformatting on or off
-    local format_is_enabled = true
-    vim.api.nvim_create_user_command('FormatToggle', function()
-      format_is_enabled = not format_is_enabled
-      print('Setting autoformatting to: ' .. tostring(format_is_enabled))
-    end, {})
+    -- Lua development
+    require("lazydev").setup()
 
-    -- Create an augroup that is used for managing our formatting autocmds.
-    --      We need one augroup per client to make sure that multiple clients
-    --      can attach to the same buffer without interfering with each other.
-    local _augroups = {}
-    local get_augroup = function(client)
-      if not _augroups[client.id] then
-        local group_name = 'kickstart-lsp-format-' .. client.name
-        local id = vim.api.nvim_create_augroup(group_name, { clear = true })
-        _augroups[client.id] = id
-      end
+    -- Mason
+    require("mason").setup()
 
-      return _augroups[client.id]
-    end
+    require("mason-lspconfig").setup({
+      ensure_installed = {
+        "lua_ls",
+        "ts_ls",
+        "vue_ls",
+        "tailwindcss",
+        "eslint",
+        "intelephense",
+      },
+    })
 
-    -- Whenever an LSP attaches to a buffer, we will run this function.
-    --
-    -- See `:help LspAttach` for more information about this autocmd event.
-    vim.api.nvim_create_autocmd('LspAttach', {
-      group = vim.api.nvim_create_augroup('lsp-attach-format', { clear = true }),
-      -- This is where we attach the autoformatting for reasonable clients
-      callback = function(args)
-        local client_id = args.data.client_id
-        local client = vim.lsp.get_client_by_id(client_id)
-        local bufnr = args.buf
 
-        -- Only attach to clients that support document formatting
-        if not client.server_capabilities.documentFormattingProvider then
-          return
-        end
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-        -- Tsserver usually works poorly. Sorry you work with bad languages
-        -- You can remove this line if you know what you're doing :)
-        if client.name == 'tsserver' then
-          return
-        end
 
-        -- Create an autocmd that will run *before* we save the buffer.
-        --  Run the formatting command for the LSP that has just attached.
-        vim.api.nvim_create_autocmd('BufWritePre', {
-          group = get_augroup(client),
-          buffer = bufnr,
-          callback = function()
-            if not format_is_enabled then
-              return
-            end
+    -- Lua
+    vim.lsp.config("lua_ls", {
+      capabilities = capabilities,
 
-            vim.lsp.buf.format {
-              async = false,
-              filter = function(c)
-                return c.id == client.id
-              end,
-            }
+      settings = {
+        Lua = {
+          diagnostics = {
+            globals = {
+              "vim",
+            },
+          },
+
+          workspace = {
+            checkThirdParty = false,
+          },
+        },
+      },
+    })
+
+
+    -- Typescript / Vue TS
+    vim.lsp.config("ts_ls", {
+      capabilities = capabilities,
+
+      filetypes = {
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "vue",
+      },
+
+      init_options = {
+        plugins = {
+          {
+            name = "@vue/typescript-plugin",
+
+            location = vim.fn.stdpath("data")
+                .. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+
+            languages = {
+              "vue",
+            },
+          },
+        },
+      },
+    })
+
+
+    -- Vue
+    vim.lsp.config("vue_ls", {
+      capabilities = capabilities,
+    })
+
+
+    -- Tailwind
+    vim.lsp.config("tailwindcss", {
+      capabilities = capabilities,
+
+      filetypes = {
+        "html",
+        "css",
+        "scss",
+        "javascript",
+        "typescript",
+        "vue",
+      },
+    })
+
+
+    -- ESLint
+    vim.lsp.config("eslint", {
+      capabilities = capabilities,
+    })
+
+
+    -- PHP
+    vim.lsp.config("intelephense", {
+      capabilities = capabilities,
+    })
+
+
+    -- Enable servers
+    vim.lsp.enable({
+      "lua_ls",
+      "ts_ls",
+      "vue_ls",
+      "tailwindcss",
+      "eslint",
+      "intelephense",
+    })
+
+
+    -- Formatting
+    require("conform").setup({
+      formatters_by_ft = {
+        vue = {
+          "prettier",
+        },
+
+        javascript = {
+          "prettier",
+        },
+
+        typescript = {
+          "prettier",
+        },
+
+        javascriptreact = {
+          "prettier",
+        },
+
+        typescriptreact = {
+          "prettier",
+        },
+
+        json = {
+          "prettier",
+        },
+
+        css = {
+          "prettier",
+        },
+
+        html = {
+          "prettier",
+        },
+
+        lua = {
+          "stylua",
+        },
+
+        php = {
+          "php_cs_fixer",
+        },
+      },
+
+      format_on_save = {
+        timeout_ms = 500,
+
+        lsp_format = "fallback",
+      },
+    })
+
+
+    -- Keymaps
+    vim.api.nvim_create_autocmd("LspAttach", {
+      callback = function(event)
+        local opts = {
+          buffer = event.buf,
+        }
+
+
+        vim.keymap.set(
+          "n",
+          "gd",
+          vim.lsp.buf.definition,
+          opts
+        )
+
+
+        vim.keymap.set(
+          "n",
+          "K",
+          vim.lsp.buf.hover,
+          opts
+        )
+
+
+        vim.keymap.set(
+          "n",
+          "gr",
+          vim.lsp.buf.references,
+          opts
+        )
+
+
+        vim.keymap.set(
+          "n",
+          "<leader>rn",
+          vim.lsp.buf.rename,
+          opts
+        )
+
+
+        vim.keymap.set(
+          "n",
+          "<leader>ca",
+          vim.lsp.buf.code_action,
+          opts
+        )
+
+
+        vim.keymap.set(
+          "n",
+          "<leader>f",
+          function()
+            require("conform").format({
+              async = true,
+              lsp_fallback = true,
+            })
           end,
-        })
+          opts
+        )
       end,
     })
   end,
